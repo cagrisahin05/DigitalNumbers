@@ -7,136 +7,51 @@ using TMPro;
 
 public class SegmentColorChange : MonoBehaviour
 {
-    [SerializeField] Material redColor;
-    [SerializeField] Material offColor;
+    [SerializeField] protected TMP_InputField sayiInput;
+    [SerializeField]  protected Button button;
+    [SerializeField] protected List<GameObject> Digits = new List<GameObject>();
+    protected int sayi;
+   
+    private List<int> rakamlar = new List<int>();
 
-    [SerializeField] GameObject[] Segments;
-    [SerializeField] TMP_InputField sayiInput;
-    [SerializeField] Button button;
-    int sayi;
-    int[][] segmentIndex = new int[][] 
-    {
-        new int[] {0, 1, 2, 4, 5, 6}, //0
-        new int[] {2, 4}, //1
-        new int[] {0, 2, 3, 5, 6}, //2
-        new int[] {0, 2, 3, 4, 6}, //3
-        new int[] {1, 2, 3, 4,}, //4
-        new int[] {0, 1, 3, 4, 6}, //5      
-        new int[] {0, 1, 3, 4, 5, 6}, //6
-        new int[] {0, 2, 4}, //7
-        new int[] {0, 1, 2, 3, 4, 5, 6}, //8
-        new int[] {0, 1, 2, 3, 4, 6} //9
-    };
     void Start()
     {
         button.onClick.AddListener(OnButtonClick);
     }
-    void OnButtonClick()
+    public void OnButtonClick()
     {
-        SayiGir(sayiInput.text);
+        RakamlaraAyir(sayiInput.text);
     }
-
-    public void SayiGir(string input)
+     void RakamlaraAyir(string input)
     {
-        if (int.TryParse(input, out sayi)) 
+        if(int.TryParse(input, out sayi))
         {
-            ChangeColor();    
-        
-        }
-        
-    }
+            rakamlar.Clear();
+            // int yuzler = sayi / 100;
+            // int onlar = (sayi % 100) / 10;
+            // int birler = sayi % 10;
+            // rakamlar.Add(yuzler);
+            // rakamlar.Add(onlar);
+            // rakamlar.Add(birler);
 
-    public void ChangeColor()
-    {
-        foreach (GameObject segment in Segments)
-        {
-            segment.GetComponent<Renderer>().material = offColor;
-        }
-
-        switch (sayi)
-        {
-            case 0:
-                foreach (int index in segmentIndex[0])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 1:
-                foreach (int index in segmentIndex[1])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 2:
-                foreach (int index in segmentIndex[2])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 3:
-                foreach (int index in segmentIndex[3])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 4:
-                foreach (int index in segmentIndex[4])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 5:
-                foreach (int index in segmentIndex[5])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 6:
-                foreach (int index in segmentIndex[6])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 7:
-                foreach (int index in segmentIndex[7])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 8:
-                foreach (int index in segmentIndex[8])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            case 9:
-                foreach (int index in segmentIndex[9])
-                {
-                    Segments[index].GetComponent<Renderer>().material = redColor;
-                }
-                break;
-
-            default:
-                Debug.LogError("Sayi 1-9 arasi olmali.");
-                break;
+            for (int i = 0; i < Digits.Count; i++)
+            {
+                int hane = (sayi / (int)Mathf.Pow(10, i)) % 10;
+                rakamlar.Add(hane);   
+            }
+            rakamlar.Reverse();
+            DigitlereGonder();          
         }
     }
 
-
-    public void OffColor()
+    void DigitlereGonder()
     {
-        foreach (GameObject segment in Segments)
+        for (int i = 0; i < Digits.Count; i++)
         {
-            segment.GetComponent<Renderer>().material = offColor;
+            Digits[i].GetComponent<Digit>().ChangeColor(rakamlar[i]);
         }
-    } 
+    }
+ 
+    
+
 } 
